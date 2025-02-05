@@ -4,6 +4,7 @@ import { TypeOrmModule } from '@nestjs/typeorm'
 import { EmissionsModule } from './emissions/emissions.module'
 import { HttpExceptionFilter } from './common/filters/http-exception.filter'
 import { RequestLoggerMiddleware } from './common/middleware/request-logger.middleware'
+import { Emission } from './emissions/entities/emission.entity'
 
 @Module({
   imports: [
@@ -14,7 +15,7 @@ import { RequestLoggerMiddleware } from './common/middleware/request-logger.midd
       username: process.env.DB_USER || 'postgres',
       password: process.env.DB_PASSWORD || 'postgres',
       database: process.env.DB_NAME || 'klimametrix',
-      entities: [__dirname + '/**/*.entity{.ts,.js}'],
+      entities: [Emission],
       synchronize: process.env.NODE_ENV !== 'production',
     }),
     EmissionsModule,

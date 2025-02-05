@@ -20,6 +20,9 @@ export class Emission {
   @CreateDateColumn()
   createdAt: Date
 
-  @Column({ type: 'jsonb', nullable: true })
-  metadata: Record<string, any>
+  @Column('jsonb', { nullable: true })
+  metadata?: {
+    equipmentId?: string
+    location?: string
+  }
 } 
