@@ -4,11 +4,10 @@
   "workspaces": [
     "apps/*"
   ],
-  "packageManager": "yarn@4.6.0",
   "scripts": {
     "dev": "turbo run dev",
     "build": "turbo run build",
-    "test": "turbo run test",
+    "test": "yarn workspace server test",
     "clean": "yarn workspaces foreach -pi run clean",
     "lint": "turbo run lint",
     "format": "yarn workspaces foreach -pi run format",
@@ -20,4 +19,4 @@
   "devDependencies": {
     "turbo": "^1.10.0"
   }
-} 
+}

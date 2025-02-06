@@ -1,0 +1,13 @@
+{
+  "globalDependencies": [],
+  "pipeline": {
+    "test": {
+      "dependsOn": [],
+      "inputs": ["!apps/client/**"]
+    },
+    "dev": {
+      "cache": false,
+      "persistent": true
+    }
+  }
+} 

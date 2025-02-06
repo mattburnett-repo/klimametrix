@@ -1,5 +1,9 @@
 import { render, screen, fireEvent } from '@testing-library/react'
+import '@testing-library/jest-dom'
 import QuickCalculator from '../../src/components/QuickCalculator'
+import { jest } from '@jest/globals'
+
+jest.mock('../../src/services/api')
 
 describe('QuickCalculator', () => {
   it('renders calculator form', () => {

@@ -1,10 +1,8 @@
-version: '3.8'
-
 services:
   client:
     build:
-      context: ./apps/client
-      dockerfile: Dockerfile
+      context: .
+      dockerfile: apps/client/Dockerfile
     ports:
       - "5173:80"
     volumes:
@@ -18,13 +16,10 @@ services:
 
   server:
     build:
-      context: ./apps/server
-      dockerfile: Dockerfile
+      context: .
+      dockerfile: apps/server/Dockerfile
     ports:
       - "3000:3000"
-    volumes:
-      - ./apps/server:/app/apps/server
-      - /app/apps/server/node_modules
     environment:
       - NODE_ENV=development
       - DATABASE_URL=postgresql://postgres:postgres@db:5432/klimametrix
@@ -33,7 +28,7 @@ services:
       - db
 
   db:
-    image: postgres:14-alpine
+    image: postgres:latest
     ports:
       - "5432:5432"
     environment:

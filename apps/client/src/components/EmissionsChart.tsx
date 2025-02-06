@@ -1,5 +1,5 @@
 import { useEffect, useRef } from 'react'
-import { Chart, registerables } from 'chart.js'
+import { Chart, registerables, ChartConfiguration } from 'chart.js'
 import { useEmissionsStore } from '../store/emissions'
 
 Chart.register(...registerables)
@@ -15,7 +15,9 @@ export default function EmissionsChart() {
     const labels = emissions.map(e => 
       new Date(e.createdAt!).toLocaleDateString('en-US', { month: 'short' })
     )
-    const data = emissions.map(e => e.totalEmissions)
+    const data = emissions
+      .map(e => e.totalEmissions)
+      .filter((value): value is number => value !== undefined)
 
     // Destroy existing chart if it exists
     if (chartInstance.current) {
@@ -25,7 +27,7 @@ export default function EmissionsChart() {
     // Create new chart
     const ctx = chartRef.current.getContext('2d')
     if (ctx) {
-      chartInstance.current = new Chart(ctx, {
+      const chartConfig: ChartConfiguration<'line'> = {
         type: 'line',
         data: {
           labels,
@@ -60,7 +62,9 @@ export default function EmissionsChart() {
             }
           }
         }
-      })
+      }
+
+      chartInstance.current = new Chart(ctx, chartConfig)
     }
 
     // Cleanup on unmount

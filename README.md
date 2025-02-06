@@ -36,39 +36,25 @@ git clone https://github.com/mattburnett-repo/klimametrix.git
 cd klimametrix
 ```
 
-2. Install dependencies locally (for IDE support):
+2. Set up Yarn:
 ```bash
-# Using Yarn 4.6
+# Create Yarn directory and download required binary
+mkdir -p .yarn/releases
+curl -L -o .yarn/releases/yarn-4.6.0.cjs https://repo.yarnpkg.com/4.6.0/packages/yarnpkg-cli/bin/yarn.js
+
+# Create yarn.lock to mark project boundary
+touch yarn.lock
+
+# Install dependencies
 yarn install
 ```
 
-3. Start the application using Docker:
+3. Start the application:
 ```bash
 docker-compose up
 ```
 
 4. Open http://localhost:5173 in your browser
-
-### Note on Dependencies
-- Local `yarn install` is needed for IDE functionality (TypeScript, autocomplete, etc.)
-- Docker containers handle their own dependency installation for runtime
-- We use Yarn 4.6 as our package manager
-
-### Yarn Configuration
-
-The project uses Yarn 4.6 with the following configuration:
-
-```yaml
-# .yarnrc.yml
-nodeLinker: node-modules
-yarnPath: .yarn/releases/yarn-4.6.0.cjs
-enableGlobalCache: false
-```
-
-To ensure consistent package management:
-- Use `yarn install` instead of `npm install`
-- The correct Yarn version is enforced through `packageManager` field in package.json
-- Workspaces are configured for monorepo support
 
 ## Project Structure
 
@@ -76,30 +62,7 @@ To ensure consistent package management:
 klimametrix/
 ├── apps/
 │   ├── client/              # React frontend
-│   │   ├── src/
-│   │   │   ├── components/  # React components
-│   │   │   ├── services/    # API services
-│   │   │   ├── store/      # State management
-│   │   │   └── types/      # TypeScript types
-│   │   └── test/           # Frontend tests
-│   │
 │   └── server/             # NestJS backend
-│       ├── src/
-│       │   ├── emissions/  # Emissions module
-│       │   └── common/     # Shared utilities
-│       └── test/          # Backend tests
-```
-
-## Testing
-
-```bash
-# Run client tests
-cd apps/client
-npm test
-
-# Run server tests
-cd apps/server
-npm test
 ```
 
 ## Environment Variables
