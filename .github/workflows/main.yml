@@ -24,10 +24,12 @@ jobs:
       - name: Run client tests
         run: |
           cd apps/client
+          yarn build
           yarn test --passWithNoTests
       - name: Run server tests
         run: |
           cd apps/server
+          yarn build
           yarn test --passWithNoTests
 
   docker:
