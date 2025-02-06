@@ -1,4 +1,4 @@
-import { Injectable, Logger } from '@nestjs/common'
+import { Injectable } from '@nestjs/common'
 import { InjectRepository } from '@nestjs/typeorm'
 import { Repository } from 'typeorm'
 import { Emission } from './entities/emission.entity'
@@ -12,8 +12,6 @@ interface EmissionStats {
 
 @Injectable()
 export class EmissionsService {
-  private readonly logger = new Logger(EmissionsService.name)
-
   constructor(
     @InjectRepository(Emission)
     private emissionsRepository: Repository<Emission>
@@ -28,7 +26,6 @@ export class EmissionsService {
 
   create(createEmissionDto: CreateEmissionDto): Promise<Emission> {
     const totalEmissions = createEmissionDto.electricity + createEmissionDto.fuel + createEmissionDto.waste    
-
     const emission = this.emissionsRepository.create({
       ...createEmissionDto,
       totalEmissions
