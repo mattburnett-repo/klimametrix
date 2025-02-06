@@ -42,6 +42,7 @@ export default function EmissionsChart() {
         },
         options: {
           responsive: true,
+          maintainAspectRatio: false,
           plugins: {
             title: {
               display: true,
@@ -50,6 +51,10 @@ export default function EmissionsChart() {
             tooltip: {
               mode: 'index',
               intersect: false,
+            },
+            legend: {
+              position: 'top',
+              align: 'center'
             }
           },
           scales: {
@@ -76,8 +81,8 @@ export default function EmissionsChart() {
   }, [emissions])
 
   return (
-    <div className="bg-white shadow sm:rounded-lg p-6">
-      <div className="space-y-4">
+    <div className="bg-white shadow sm:rounded-lg p-6 w-full">
+      <div className="space-y-4 w-full">
         <div>
           <h3 className="text-lg leading-6 font-medium text-gray-900">
             Emissions Analytics
@@ -87,8 +92,8 @@ export default function EmissionsChart() {
           </p>
         </div>
 
-        <div className="h-96">
-          <canvas ref={chartRef} />
+        <div className="h-96 w-full">
+          <canvas ref={chartRef} className="w-full h-full" />
         </div>
 
         <div className="grid grid-cols-1 md:grid-cols-3 gap-4">

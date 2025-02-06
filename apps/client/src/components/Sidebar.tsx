@@ -2,6 +2,7 @@ import { Fragment } from 'react'
 import { Dialog, Transition } from '@headlessui/react'
 import { XMarkIcon } from '@heroicons/react/24/outline'
 import { ChartBarIcon, HomeIcon } from '@heroicons/react/24/outline'
+import { Link, useLocation } from 'react-router-dom'
 
 interface SidebarProps {
   open: boolean
@@ -9,9 +10,11 @@ interface SidebarProps {
 }
 
 export default function Sidebar({ open, setOpen }: SidebarProps) {
+  const location = useLocation();
+  
   const navigation = [
-    { name: 'Dashboard', href: '#', icon: HomeIcon, current: true },
-    { name: 'Reports', href: '#', icon: ChartBarIcon, current: false },
+    { name: 'Dashboard', href: '/', icon: HomeIcon, current: location.pathname === '/' },
+    { name: 'Reports', href: '/reports', icon: ChartBarIcon, current: location.pathname === '/reports' },
   ]
 
   return (
@@ -34,9 +37,9 @@ export default function Sidebar({ open, setOpen }: SidebarProps) {
             <div className="flex-1 h-0 pt-5 pb-4 overflow-y-auto">
               <nav className="mt-5 px-2 space-y-1">
                 {navigation.map((item) => (
-                  <a
+                  <Link
                     key={item.name}
-                    href={item.href}
+                    to={item.href}
                     className={`
                       group flex items-center px-2 py-2 text-base font-medium rounded-md
                       ${item.current
@@ -54,7 +57,7 @@ export default function Sidebar({ open, setOpen }: SidebarProps) {
                       aria-hidden="true"
                     />
                     {item.name}
-                  </a>
+                  </Link>
                 ))}
               </nav>
             </div>
@@ -68,9 +71,9 @@ export default function Sidebar({ open, setOpen }: SidebarProps) {
             <div className="flex-1 flex flex-col pt-5 pb-4 overflow-y-auto">
               <nav className="mt-5 flex-1 px-2 bg-white space-y-1">
                 {navigation.map((item) => (
-                  <a
+                  <Link
                     key={item.name}
-                    href={item.href}
+                    to={item.href}
                     className={`
                       group flex items-center px-2 py-2 text-sm font-medium rounded-md
                       ${item.current
@@ -88,7 +91,7 @@ export default function Sidebar({ open, setOpen }: SidebarProps) {
                       aria-hidden="true"
                     />
                     {item.name}
-                  </a>
+                  </Link>
                 ))}
               </nav>
             </div>
