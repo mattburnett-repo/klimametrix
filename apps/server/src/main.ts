@@ -12,7 +12,7 @@ async function bootstrap() {
     methods: ['GET', 'POST'],
     allowedHeaders: ['Content-Type', 'Authorization'],
   })
-
+ 
   // Enable validation pipes globally
   app.useGlobalPipes(new ValidationPipe({
     whitelist: true,

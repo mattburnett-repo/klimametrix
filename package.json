@@ -13,7 +13,7 @@
     "format": "yarn workspaces foreach -pi run format",
     "typecheck": "yarn workspaces foreach -pi run typecheck",
     "docker:up": "docker-compose up",
-    "docker:build": "docker-compose build",
+    "docker:build": "docker-compose build --no-cache",
     "docker:down": "docker-compose down"
   },
   "devDependencies": {

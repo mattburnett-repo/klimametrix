@@ -18,8 +18,12 @@ services:
     build:
       context: .
       dockerfile: apps/server/Dockerfile
+    # command: yarn start:dev
     ports:
       - "3000:3000"
+    volumes:
+      - ./apps/server:/app/apps/server
+      - /app/apps/server/node_modules
     environment:
       - NODE_ENV=development
       - DATABASE_URL=postgresql://postgres:postgres@db:5432/klimametrix
