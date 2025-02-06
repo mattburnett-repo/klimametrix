@@ -21,16 +21,17 @@ jobs:
           corepack enable
           corepack prepare yarn@4.6.0 --activate
           yarn install
+          npm install -g jest
       - name: Run client tests
         run: |
           cd apps/client
           yarn build
-          yarn test --passWithNoTests
+          npx jest --passWithNoTests
       - name: Run server tests
         run: |
           cd apps/server
           yarn build
-          yarn test --passWithNoTests
+          npx jest --passWithNoTests
 
   docker:
     needs: test
