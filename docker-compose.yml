@@ -4,13 +4,7 @@ services:
       context: .
       dockerfile: apps/client/Dockerfile
     ports:
-      - "5173:80"
-    volumes:
-      - ./apps/client:/app/apps/client
-      - /app/apps/client/node_modules
-    environment:
-      - NODE_ENV=development
-      - YARN_VERSION=4.6.0
+      - "80:80"
     depends_on:
       - server
 
@@ -18,23 +12,16 @@ services:
     build:
       context: .
       dockerfile: apps/server/Dockerfile
-    # command: yarn start:dev
     ports:
       - "3000:3000"
-    volumes:
-      - ./apps/server:/app/apps/server
-      - /app/apps/server/node_modules
     environment:
-      - NODE_ENV=development
+      - NODE_ENV=production
       - DATABASE_URL=postgresql://postgres:postgres@db:5432/klimametrix
-      - YARN_VERSION=4.6.0
     depends_on:
       - db
 
   db:
     image: postgres:latest
-    ports:
-      - "5432:5432"
     environment:
       - POSTGRES_USER=postgres
       - POSTGRES_PASSWORD=postgres
