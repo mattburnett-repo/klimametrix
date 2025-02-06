@@ -19,7 +19,8 @@ jobs:
       - name: Install dependencies
         run: |
           corepack enable
-          yarn install --frozen-lockfile # Ensures all dependencies, including dev dependencies, are installed
+          yarn install
+          yarn build # Add this line to build the dependencies
       - name: Run client tests
         run: |
           cd apps/client
