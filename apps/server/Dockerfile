@@ -2,8 +2,11 @@ FROM node:18-alpine
 
 WORKDIR /app
 
-# Copy package files
-COPY package.json yarn.lock ./
+# Copy root package files first
+COPY ../../package.json ../../yarn.lock ./
+
+# Copy server package.json
+COPY package.json ./
 
 # Install dependencies
 RUN corepack enable && \
