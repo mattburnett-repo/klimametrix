@@ -2,11 +2,9 @@ FROM node:18-alpine
 
 WORKDIR /app
 
-# Copy root package files first
-COPY ../../package.json ../../yarn.lock ./
-
-# Copy server package.json
-COPY package.json ./
+# Copy package files
+COPY package.json yarn.lock ./
+COPY apps/server/package.json ./
 
 # Install dependencies
 RUN corepack enable && \
@@ -14,7 +12,7 @@ RUN corepack enable && \
     yarn install --frozen-lockfile
 
 # Copy source code
-COPY . .
+COPY apps/server .
 
 # Build the application
 RUN yarn build
