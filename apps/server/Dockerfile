@@ -5,14 +5,18 @@ FROM node:18-alpine
 WORKDIR /app
 
 # Copy package files
+
+# Copy package.json (which is in the same directory as the Dockerfile)
 COPY package.json ./
+
+# Copy yarn.lock from two levels up
+COPY ../../yarn.lock ./
+
 COPY tsconfig.json ./
 COPY src ./src
 
 # Install dependencies
-RUN corepack enable && \
-    corepack prepare yarn@4.6.0 --activate && \
-    yarn install
+RUN corepack enable && yarn install
 
 # Build the application
 RUN yarn build
