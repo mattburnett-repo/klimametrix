@@ -17,6 +17,9 @@ RUN yarn build
 # Production stage
 FROM node:18-alpine
 
+# Enable Yarn in production stage
+RUN corepack enable && corepack prepare yarn@4.6.0 --activate
+
 WORKDIR /app
 
 # Copy built files from builder
@@ -27,4 +30,5 @@ COPY --from=builder /app/.pnp.* .
 COPY --from=builder /app/yarn.lock .
 
 EXPOSE 3000
+
 CMD ["yarn", "node", "dist/main"]
