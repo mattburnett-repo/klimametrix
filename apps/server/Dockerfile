@@ -4,19 +4,12 @@ FROM node:18-alpine
 # Set the working directory inside the container
 WORKDIR /app
 
-# Copy package files
+# Copy all files
+COPY . .
 
-# Copy package.json (which is in the same directory as the Dockerfile)
-COPY package.json ./
-
-# Copy yarn.lock from two levels up
-COPY ../../yarn.lock ./
-
-COPY tsconfig.json ./
-COPY src ./src
-
-# Install dependencies
-RUN corepack enable && yarn install
+# Enable Yarn and install dependencies
+RUN corepack enable && \
+    yarn install
 
 # Build the application
 RUN yarn build
@@ -28,4 +21,5 @@ WORKDIR /app/dist
 
 EXPOSE 3000
 
-CMD ["node", "main"]
+# Run the built application
+CMD ["yarn", "node", "dist/main"]
