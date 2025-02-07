@@ -1,23 +1,28 @@
-# Use an official Node.js image as the base
+# Use Node.js base image
 FROM node:18-alpine
+
+# Install curl
+RUN apk add --no-cache curl
 
 # Set the working directory inside the container
 WORKDIR /app
 
-# Copy package files
+# Copy package.json first (to take advantage of Docker layer caching)
 COPY package.json ./
-COPY ../../yarn.lock ./
 
-# Copy server files
-COPY . ./apps/server
+# Download yarn.lock from GitHub
+RUN curl -o yarn.lock https://raw.githubusercontent.com/mattburnett-repo/klimametrix/main/yarn.lock
 
-# Install dependencies using Yarn 1.x
+# Install dependencies
 RUN yarn install
 
+# Copy only the server files (avoid unnecessary files)
+COPY . .
+
 # Build the server
-WORKDIR /app/apps/server
 RUN yarn build
 
+# Expose the port the app runs on
 EXPOSE 3000
 
 # Run the built application
