@@ -22,13 +22,13 @@ RUN corepack enable && corepack prepare yarn@4.6.0 --activate
 
 WORKDIR /app
 
-# Copy built files from builder
+# Copy production files
 COPY --from=builder /app/dist ./dist
 COPY --from=builder /app/package.json .
-COPY --from=builder /app/.yarn ./.yarn
-COPY --from=builder /app/.pnp.* .
-COPY --from=builder /app/yarn.lock .
+
+# Install production dependencies
+RUN yarn install --production --no-immutable
 
 EXPOSE 3000
 
-CMD ["yarn", "node", "dist/main"]
+CMD ["node", "dist/main"]
