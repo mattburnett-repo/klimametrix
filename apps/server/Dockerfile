@@ -21,8 +21,10 @@ WORKDIR /app
 
 # Copy built files from builder
 COPY --from=builder /app/dist ./dist
-COPY --from=builder /app/node_modules ./node_modules
 COPY --from=builder /app/package.json .
+COPY --from=builder /app/.yarn ./.yarn
+COPY --from=builder /app/.pnp.* .
+COPY --from=builder /app/yarn.lock .
 
 EXPOSE 3000
-CMD ["node", "dist/main"] 
+CMD ["yarn", "node", "dist/main"]
