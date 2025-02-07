@@ -27,7 +27,9 @@ COPY --from=builder /app/dist ./dist
 COPY --from=builder /app/package.json .
 
 # Install production dependencies
-RUN yarn install --production --no-immutable
+# RUN yarn install --production --no-immutable
+RUN yarn workspaces focus --production
+
 
 EXPOSE 3000
 
