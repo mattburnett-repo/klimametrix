@@ -1,30 +1,27 @@
-# Use Node.js base image
+# Use an official Node.js runtime as the base image
 FROM node:18-alpine
 
-# Install curl and enable Corepack to manage Yarn versions
+# Set the working directory in the container
+WORKDIR /app
+
+# Install dependencies required for building the project
 RUN apk add --no-cache curl && \
     corepack enable
 
-# Set the working directory inside the container
-WORKDIR /app
+# Copy the root package.json and yarn.lock files
+COPY package.json yarn.lock ./
 
-# Copy package.json first (to take advantage of Docker layer caching)
-COPY package.json ./
+# Copy the entire workspace folder structure (e.g., packages/*)
+COPY packages ./packages/
 
-# Download yarn.lock from GitHub (if necessary)
-RUN curl -o yarn.lock https://raw.githubusercontent.com/mattburnett-repo/klimametrix/main/yarn.lock
+# Install all dependencies for the monorepo (including workspaces)
+RUN yarn install --frozen-lockfile
 
-# Install dependencies using the correct Yarn version (managed by Corepack)
-RUN yarn install
-
-# Build the project (compile TypeScript or other build tasks)
-RUN yarn build
-
-# Copy the remaining server files (avoid unnecessary files)
+# Copy the rest of the application code into the container
 COPY . .
 
-# Expose the port the app runs on
+# Expose the port the app will run on (adjust as needed)
 EXPOSE 3000
 
-# Run the built application
-CMD ["node", "dist/main.js"]
+# Command to run the application (adjust based on your entry point)
+CMD ["yarn", "start"]
