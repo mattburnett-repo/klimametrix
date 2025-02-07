@@ -8,7 +8,8 @@ COPY package.json ./
 # Install dependencies
 RUN corepack enable && \
     corepack prepare yarn@4.6.0 --activate && \
-    yarn install --immutable
+    yarn install --no-lockfile
+
 
 # Copy source code
 COPY . .
