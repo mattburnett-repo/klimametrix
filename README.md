@@ -81,6 +81,28 @@ DB_PASSWORD=postgres
 DB_NAME=klimametrix
 ```
 
+## Environment Configuration
+
+The project uses environment-specific configuration files:
+
+- `.env` in project root: Controls which environment the application runs in
+  ```env
+  # Use 'development' for local development
+  # Use 'production' for production deployment
+  NODE_ENV=development
+  ```
+
+- `apps/server/.env.development`: Development environment variables
+- `apps/server/.env.production`: Production environment variables
+- `apps/client/.env.development`: Client development variables
+- `apps/client/.env.production`: Client production variables
+
+## Development
+
+1. Create `.env` file in project root and set `NODE_ENV=development`
+2. Run `docker-compose up` to start all services
+3. Access the application at http://localhost
+
 ## Contributing
 
 This is a demo project, but feel free to fork and modify for your own use.

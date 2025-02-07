@@ -9,6 +9,9 @@ on:
 jobs:
   docker:
     runs-on: ubuntu-latest
+    env:
+      # Change this to the production domain?
+      ALLOWED_ORIGINS: http://localhost
     steps:
       - uses: actions/checkout@v4
       - name: Set up Docker Buildx
@@ -25,3 +28,4 @@ jobs:
     steps:
       - uses: actions/checkout@v4
       # Deployment steps will be added later
+      # Environment variables will be added later

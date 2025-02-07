@@ -5,9 +5,16 @@ import { EmissionsModule } from './emissions/emissions.module'
 import { HttpExceptionFilter } from './common/filters/http-exception.filter'
 import { RequestLoggerMiddleware } from './common/middleware/request-logger.middleware'
 import { Emission } from './emissions/entities/emission.entity'
+import { ConfigModule } from '@nestjs/config'
 
 @Module({
   imports: [
+    ConfigModule.forRoot({
+      envFilePath: [
+        `.env.${process.env.NODE_ENV}`,
+        '.env'
+      ],
+    }),
     TypeOrmModule.forRoot({
       type: 'postgres',
       host: process.env.DB_HOST || 'db',
