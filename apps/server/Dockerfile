@@ -1,8 +1,9 @@
 # Use Node.js base image
 FROM node:18-alpine
 
-# Install curl
-RUN apk add --no-cache curl
+# Install curl and enable Corepack to manage Yarn versions
+RUN apk add --no-cache curl && \
+    corepack enable
 
 # Set the working directory inside the container
 WORKDIR /app
@@ -13,7 +14,7 @@ COPY package.json ./
 # Download yarn.lock from GitHub
 RUN curl -o yarn.lock https://raw.githubusercontent.com/mattburnett-repo/klimametrix/main/yarn.lock
 
-# Install dependencies
+# Install dependencies using the correct Yarn version (managed by Corepack)
 RUN yarn install
 
 # Copy only the server files (avoid unnecessary files)
