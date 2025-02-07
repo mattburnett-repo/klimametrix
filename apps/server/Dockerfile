@@ -3,8 +3,7 @@ FROM node:18-alpine
 WORKDIR /app
 
 # Copy package files
-COPY package.json yarn.lock ./
-COPY apps/server/package.json ./
+COPY package.json ./
 
 # Install dependencies
 RUN corepack enable && \
@@ -12,7 +11,7 @@ RUN corepack enable && \
     yarn install --frozen-lockfile
 
 # Copy source code
-COPY apps/server .
+COPY . .
 
 # Build the application
 RUN yarn build
