@@ -4,11 +4,9 @@ FROM node:18-alpine
 # Set the working directory inside the container
 WORKDIR /app
 
-# Copy workspace files
+# Copy package files
 COPY package.json ./
 COPY ../../yarn.lock ./
-# COPY ../../.yarn ./.yarn
-# COPY ../../.yarnrc.yml ./
 
 # Copy server files
 COPY . ./apps/server
