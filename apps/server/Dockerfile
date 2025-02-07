@@ -1,26 +1,27 @@
 # Use an official Node.js image as the base
-FROM node:18
+FROM node:18-alpine
 
 # Set the working directory inside the container
 WORKDIR /app
 
-# Copy package files first (for better caching)
-COPY package.json yarn.lock tsconfig.json ./
-
-# Enable Corepack and install dependencies using traditional node_modules
-RUN corepack enable && \
-    corepack prepare yarn@4.6.0 --activate && \
-    yarn install --mode=classic
-
-# Copy the source code
+# Copy package files
+COPY package.json ./
+COPY tsconfig.json ./
 COPY src ./src
 
-# Build the project
+# Install dependencies
+RUN corepack enable && \
+    corepack prepare yarn@4.6.0 --activate && \
+    yarn install
+
+# Build the application
 RUN yarn build
 
-# Ensure dependencies and build output exist
-RUN ls -la node_modules/@nestjs/core || echo "Dependency missing!" && \
-    ls -la dist || echo "No dist folder found!"
+# Copy node_modules for production
+RUN cp -r node_modules dist/
 
-# Start the application
-CMD ["node", "dist/main.js"]
+WORKDIR /app/dist
+
+EXPOSE 3000
+
+CMD ["node", "main"]
