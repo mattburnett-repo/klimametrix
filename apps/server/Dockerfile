@@ -4,15 +4,13 @@ WORKDIR /app
 
 # Copy package files
 COPY package.json ./
+COPY tsconfig.json ./
+COPY src ./src
 
 # Install dependencies
 RUN corepack enable && \
     corepack prepare yarn@4.6.0 --activate && \
     yarn install
-
-
-# Copy source code
-COPY . .
 
 # Build the application
 RUN yarn build
