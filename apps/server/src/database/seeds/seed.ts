@@ -1,9 +1,9 @@
 import { DataSource } from 'typeorm'
-import { config } from 'dotenv'
+import { ConfigModule } from '@nestjs/config'
 import { initialSeed } from './initial.seed'
 
 // Load environment variables
-config()
+ConfigModule.forRoot()
 
 // Create a new data source
 const dataSource = new DataSource({
