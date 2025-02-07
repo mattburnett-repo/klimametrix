@@ -4,14 +4,21 @@ FROM node:18-alpine
 # Set the working directory inside the container
 WORKDIR /app
 
-# Copy all files
-COPY . .
+# Copy workspace files
+COPY package.json yarn.lock ./
+COPY .yarn ./.yarn
+COPY .yarnrc.yml ./
+
+# Copy server files
+COPY apps/server ./apps/server
 
 # Enable Yarn and install dependencies
 RUN corepack enable && \
+    corepack prepare yarn@4.6.0 --activate && \
     yarn install
 
-# Build the application
+# Build the server
+WORKDIR /app/apps/server
 RUN yarn build
 
 # Copy node_modules for production
