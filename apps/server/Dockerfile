@@ -1,20 +1,21 @@
-# Use a minimal Node.js base image
-FROM node:18-slim
+# Use an official Node.js image
+FROM node:18
 
-# Set working directory inside the container
+# Set working directory
 WORKDIR /app
 
-# Copy only the package.json (without yarn.lock)
+# Ensure Yarn 1.x is used
+RUN corepack disable && npm install -g yarn@1 && yarn --version
+
+# Copy package files
 COPY package.json ./
 
-# Enable Corepack and install dependencies without yarn.lock
-RUN corepack enable && yarn set version stable && yarn install --no-lockfile
+# Install dependencies without using a lockfile
+RUN yarn install --no-lockfile
 
-# Copy the rest of the server code
+# Copy the rest of the application files
 COPY . .
 
-# Expose the app's port
+# Expose port and set the startup command
 EXPOSE 3000
-
-# Start the server
 CMD ["yarn", "start"]
