@@ -19,7 +19,6 @@ jobs:
           repository: mattburnett-repo/klimametrix-api
           path: deploy-repo
           token: ${{ secrets.DEPLOY_PAT }}
-
       - name: Sync Files
         run: |
           # Clean deployment repo
@@ -32,8 +31,8 @@ jobs:
 
           # Copy and modify package.json
           cp ../monorepo/apps/server/package.json ./
-          # Update dependencies to compatible versions
-          sed -i 's/"@nestjs\/swagger": "^11.0.3"/"@nestjs\/swagger": "^10.2.1"/g' package.json
+          # Update to a specific, known working version
+          sed -i 's/"@nestjs\/swagger": "^11.0.3"/"@nestjs\/swagger": "10.0.0"/g' package.json
           
           # Create simplified Dockerfile
           cat > Dockerfile << 'EOF'
