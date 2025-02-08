@@ -1,26 +1,20 @@
-# Use the official Node.js image as the base image
+# Use a minimal Node.js base image
 FROM node:18-slim
 
-# Set the working directory in the container
+# Set working directory inside the container
 WORKDIR /app
 
-# Copy the package.json from the root of the project
-COPY package.json yarn.lock ./
+# Copy only the package.json (without yarn.lock)
+COPY package.json ./
 
-# Install corepack and set Yarn version to stable
-RUN corepack enable && yarn set version stable
+# Enable Corepack and install dependencies without yarn.lock
+RUN corepack enable && yarn set version stable && yarn install --no-lockfile
 
-# Install dependencies using Yarn
-RUN yarn install --frozen-lockfile --network-timeout 600000
+# Copy the rest of the server code
+COPY . .
 
-# Copy only the server workspace files
-COPY apps/server ./apps/server
-
-# Focus on the server workspace and install required dependencies
-RUN yarn workspaces focus server --all
-
-# Expose the port that your app will run on
+# Expose the app's port
 EXPOSE 3000
 
-# Set the default command to run your app
+# Start the server
 CMD ["yarn", "start"]
