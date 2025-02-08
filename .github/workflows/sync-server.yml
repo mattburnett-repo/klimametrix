@@ -32,8 +32,8 @@ jobs:
 
           # Copy and modify package.json
           cp ../monorepo/apps/server/package.json ./
-          # Update @nestjs/swagger version to match common version
-          sed -i 's/"@nestjs\/swagger": "\^11.0.3"/"@nestjs\/swagger": "10.1.2"/g' package.json
+          # Update dependencies to compatible versions
+          sed -i 's/"@nestjs\/swagger": "^11.0.3"/"@nestjs\/swagger": "^10.2.1"/g' package.json
           
           # Create simplified Dockerfile
           cat > Dockerfile << 'EOF'
