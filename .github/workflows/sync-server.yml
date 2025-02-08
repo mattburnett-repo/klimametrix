@@ -30,7 +30,6 @@ jobs:
           cp -r ../monorepo/apps/server/src ./src
           cp ../monorepo/apps/server/package.json ./
           cp ../monorepo/apps/server/tsconfig.json ./
-          cp ../monorepo/apps/server/.env.example ./.env.example
           
           # Create simplified Dockerfile
           cat > Dockerfile << 'EOF'
@@ -39,7 +38,7 @@ jobs:
           WORKDIR /app
 
           COPY package.json ./
-          RUN npm install
+          RUN npm install --legacy-peer-deps
 
           COPY . .
           RUN npm run build
@@ -48,20 +47,8 @@ jobs:
           CMD ["npm", "run", "start:prod"]
           EOF
 
-          # Create .gitignore
-          cat > .gitignore << 'EOF'
-          node_modules
-          dist
-          .env
-          EOF
-
-          # Remove monorepo-specific configs from package.json
-          sed -i '/packageManager/d' package.json
-
           # Commit and push if there are changes
           git config user.name "GitHub Action"
           git config user.email "action@github.com"
           git add -A
           git diff --quiet && git diff --staged --quiet || (git commit -m "Sync from monorepo" && git push)
-
-# More can go here.
