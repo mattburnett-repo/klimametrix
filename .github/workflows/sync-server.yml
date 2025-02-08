@@ -26,43 +26,17 @@ jobs:
           cd deploy-repo
           find . -not -path './.git/*' -not -name '.git' -delete
 
-          # Copy essential files
-          cp -r ../monorepo/apps/server/src ./src
-          cp ../monorepo/apps/server/tsconfig.json ./
+          # Copy server files
+          cp -r ../monorepo/apps/server/* ./
 
-          # Copy and modify package.json
-          cp ../monorepo/apps/server/package.json ./
-          
-          # Remove swagger from package.json
-          sed -i '/"@nestjs\/swagger"/d' package.json
-          
-          # Clean up Swagger from main.ts
-          sed -i '/import.*swagger/d' ./src/main.ts
-          sed -i '/SwaggerModule/d' ./src/main.ts
-          sed -i '/DocumentBuilder/d' ./src/main.ts
-          sed -i '/setTitle/d' ./src/main.ts
-          sed -i '/setDescription/d' ./src/main.ts
-          sed -i '/setVersion/d' ./src/main.ts
-          sed -i '/addTag/d' ./src/main.ts
-          sed -i '/createDocument/d' ./src/main.ts
-          sed -i '/setup/d' ./src/main.ts
-
-          # Clean up Swagger from DTOs
-          find ./src -type f -name "*.dto.ts" -exec sed -i '/@ApiProperty/d' {} +
-          
-          # Clean up Swagger from controllers
-          find ./src -type f -name "*.controller.ts" -exec sed -i '/@ApiTags/d' {} +
-          find ./src -type f -name "*.controller.ts" -exec sed -i '/@ApiOperation/d' {} +
-          find ./src -type f -name "*.controller.ts" -exec sed -i '/@ApiResponse/d' {} +
-
-          # Create clean Dockerfile
+          # Create simple Dockerfile
           cat << 'EOF' > Dockerfile
           FROM node:18
 
           WORKDIR /app
 
           COPY package.json ./
-          RUN npm install
+          RUN npm install --legacy-peer-deps
 
           COPY . .
           RUN npm run build
@@ -71,7 +45,7 @@ jobs:
           CMD ["npm", "run", "start:prod"]
           EOF
 
-          # Commit and push if there are changes
+          # Commit and push
           git config user.name "GitHub Action"
           git config user.email "action@github.com"
           git add -A
