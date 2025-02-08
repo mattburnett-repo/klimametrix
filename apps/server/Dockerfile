@@ -25,4 +25,4 @@ COPY . .
 
 # Expose port and set the startup command
 EXPOSE 3000
-CMD ["yarn", "start"]
+CMD ["yarn", "start:prod"]
