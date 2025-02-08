@@ -1,0 +1,65 @@
+name: Sync Server to Deployment Repo
+
+on:
+  push:
+    branches: [main]
+    paths:
+      - 'apps/server/**'
+
+jobs:
+  sync:
+    runs-on: ubuntu-latest
+    steps:
+      - uses: actions/checkout@v3
+        with:
+          path: monorepo
+
+      - uses: actions/checkout@v3
+        with:
+          repository: mattburnett-repo/klimametrix-api
+          path: deploy-repo
+          token: ${{ secrets.DEPLOY_PAT }}
+
+      - name: Sync Files
+        run: |
+          # Clean deployment repo
+          cd deploy-repo
+          find . -not -path './.git/*' -not -name '.git' -delete
+
+          # Copy essential files
+          cp -r ../monorepo/apps/server/src ./src
+          cp ../monorepo/apps/server/package.json ./
+          cp ../monorepo/apps/server/tsconfig.json ./
+          cp ../monorepo/apps/server/.env.example ./.env.example
+          
+          # Create simplified Dockerfile
+          cat > Dockerfile << 'EOF'
+          FROM node:18
+
+          WORKDIR /app
+
+          COPY package.json ./
+          RUN npm install
+
+          COPY . .
+          RUN npm run build
+
+          EXPOSE 3000
+          CMD ["npm", "run", "start:prod"]
+          EOF
+
+          # Create .gitignore
+          cat > .gitignore << 'EOF'
+          node_modules
+          dist
+          .env
+          EOF
+
+          # Remove monorepo-specific configs from package.json
+          sed -i '/packageManager/d' package.json
+
+          # Commit and push if there are changes
+          git config user.name "GitHub Action"
+          git config user.email "action@github.com"
+          git add -A
+          git diff --quiet && git diff --staged --quiet || (git commit -m "Sync from monorepo" && git push)
