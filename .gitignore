@@ -51,3 +51,6 @@ Thumbs.db
 
 # But keep example files
 !.env.example 
+
+# Misc
+*.rtf

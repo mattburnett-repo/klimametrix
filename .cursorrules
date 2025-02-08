@@ -1,0 +1,86 @@
+DEPLOYMENT RULES
+
+INITIAL CHECK:
+1. Focus on Deployment
+   - Get app running in production
+   - Skip improvements/optimizations
+   - Keep solutions minimal
+   - Verify actual requirements
+
+2. Repository Structure
+   - Check monorepo layout
+   - Verify service locations
+   - Note file paths
+   - Understand dependencies
+
+3. Error Handling
+   - Read error messages first
+   - One error at a time
+   - Start with simplest fix
+   - Revert if complex
+
+DEPLOYMENT PROCESS:
+1. Repository Setup
+   - Create empty deployment repos
+   - Add minimal README
+   - No complex setup
+   - Match existing structure
+
+2. GitHub Actions
+   - Copy files without changes first
+   - Add dependencies only when needed
+   - Keep Dockerfile simple
+   - Use --legacy-peer-deps if needed
+
+3. Render Setup
+   - Basic build settings
+   - Required env vars
+   - Database connection
+   - Node version check
+
+ERROR PATTERNS:
+1. TypeScript
+   - Add missing types
+   - Check tsconfig exists
+   - Verify package.json
+
+2. Dependencies
+   - Try --legacy-peer-deps
+   - Check compatibility
+   - Keep original versions
+
+3. Build
+   - Verify Node version
+   - Check commands
+   - Validate env vars
+
+4. Database
+   - Check connection string
+   - Verify credentials
+   - Test connectivity
+
+DOCUMENTATION:
+1. Architecture
+   - Development structure
+   - Production repos
+   - Deployment flow
+
+2. Environment
+   - Required variables
+   - Example values
+   - Connection details
+
+3. Actions
+   - Workflow files
+   - Sync process
+   - Build steps
+
+STOP AND RESET IF:
+- Adding new features
+- Optimizing prematurely
+- Changing working code
+- Making multiple fixes
+- Solution feels complex
+- Missing error context
+- Skipping error messages
+- Assuming complexity
