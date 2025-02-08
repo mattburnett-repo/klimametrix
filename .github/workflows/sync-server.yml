@@ -28,8 +28,12 @@ jobs:
 
           # Copy essential files
           cp -r ../monorepo/apps/server/src ./src
-          cp ../monorepo/apps/server/package.json ./
           cp ../monorepo/apps/server/tsconfig.json ./
+
+          # Copy and modify package.json
+          cp ../monorepo/apps/server/package.json ./
+          # Update @nestjs/swagger version to match common version
+          sed -i 's/"@nestjs\/swagger": "\^11.0.3"/"@nestjs\/swagger": "10.1.2"/g' package.json
           
           # Create simplified Dockerfile
           cat > Dockerfile << 'EOF'
@@ -38,7 +42,7 @@ jobs:
           WORKDIR /app
 
           COPY package.json ./
-          RUN npm install --legacy-peer-deps
+          RUN npm install
 
           COPY . .
           RUN npm run build
