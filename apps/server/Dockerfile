@@ -1,27 +1,27 @@
-# Use an official Node.js runtime as the base image
-FROM node:18-alpine
+# Use an official Node.js image
+FROM node:18
 
-# Set the working directory in the container
+# Set the working directory inside the container
 WORKDIR /app
 
-# Install dependencies required for building the project
-RUN apk add --no-cache curl && \
-    corepack enable
+# Install dependencies: Pull from the monorepo (without needing yarn.lock)
+RUN corepack enable && yarn set version stable
 
-# Copy the root package.json and yarn.lock files
-COPY package.json yarn.lock ./
+# Initialize a new empty package.json
+RUN echo '{ "private": true, "workspaces": ["*"] }' > package.json
 
-# Copy the entire workspace folder structure (e.g., packages/*)
-COPY packages ./packages/
+# Install only the dependencies for `apps/server`
+COPY package.json ./
+RUN yarn workspaces focus server --all
 
-# Install all dependencies for the monorepo (including workspaces)
-RUN yarn install --frozen-lockfile
-
-# Copy the rest of the application code into the container
+# Copy the rest of the server app
 COPY . .
 
-# Expose the port the app will run on (adjust as needed)
+# Build TypeScript (if applicable)
+RUN yarn build
+
+# Expose port (adjust if necessary)
 EXPOSE 3000
 
-# Command to run the application (adjust based on your entry point)
-CMD ["yarn", "start"]
+# Start the server
+CMD ["node", "dist/main"]
