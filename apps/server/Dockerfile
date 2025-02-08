@@ -4,12 +4,20 @@ FROM node:18 as build
 # Set working directory for the build stage
 WORKDIR /app
 
-# Copy package.json to install dependencies
-COPY package.json ./
+# Copy package.json and yarn.lock to install dependencies
+COPY package.json yarn.lock ./
 
 # Enable Corepack and install Yarn (without the lockfile)
-# RUN corepack enable && yarn install --no-lockfile
-RUN corepack enable && yarn install
+RUN corepack enable && yarn install --no-lockfile
+
+# Install TypeScript globally (in case it's not available in the project)
+RUN yarn global add typescript
+
+# Copy the rest of the application files
+COPY . .
+
+# Run TypeScript compilation using npx
+RUN npx tsc --project tsconfig.json
 
 # Stage 2: Final image
 FROM node:18
@@ -17,14 +25,11 @@ FROM node:18
 # Set working directory for the final image
 WORKDIR /app
 
-# Copy the installed node_modules from the build stage
-# COPY --from=build /app/node_modules /app/node_modules
+# Copy the compiled dist folder from the build stage
+COPY --from=build /app/dist /app/dist
 
-# Copy the rest of the application files
+# Copy any remaining necessary files
 COPY . .
-
-# Build the TypeScript files
-RUN yarn build
 
 # Expose port and set the startup command
 EXPOSE 3000
