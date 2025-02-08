@@ -1,36 +1,21 @@
-# Stage 1: Build the dependencies
-FROM node:18 as build
+# Build stage
+FROM node:18-alpine AS builder
+RUN corepack enable && corepack prepare yarn@4.6.0 --activate
 
-# Set working directory for the build stage
 WORKDIR /app
-
-# Copy package.json  to install dependencies
-COPY package.json  ./
-
-# Enable Corepack and install Yarn (without the lockfile)
-RUN corepack enable && yarn install --no-lockfile
-
-# Install TypeScript globally (in case it's not available in the project)
-RUN yarn global add typescript
-
-# Copy the rest of the application files
 COPY . .
 
-# Run TypeScript compilation using npx
-RUN npx tsc --project tsconfig.json
+# Install dependencies and build
+RUN yarn install
+RUN cd apps/server && yarn build
 
-# Stage 2: Final image
-FROM node:18
+# Production stage
+FROM node:18-alpine
 
-# Set working directory for the final image
-WORKDIR /app
+WORKDIR /app/apps/server
+COPY --from=builder /app/apps/server/dist ./dist
+COPY --from=builder /app/apps/server/package.json ./
+COPY --from=builder /app/node_modules ./node_modules
 
-# Copy the compiled dist folder from the build stage
-COPY --from=build /app/dist /app/dist
-
-# Copy any remaining necessary files
-COPY . .
-
-# Expose port and set the startup command
 EXPOSE 3000
-CMD ["yarn", "start:prod"]
+CMD ["node", "dist/main"] 
