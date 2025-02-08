@@ -23,6 +23,9 @@ WORKDIR /app
 # Copy the rest of the application files
 COPY . .
 
+# Build the TypeScript files
+RUN yarn build
+
 # Expose port and set the startup command
 EXPOSE 3000
 CMD ["yarn", "start:prod"]
