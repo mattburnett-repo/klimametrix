@@ -109,6 +109,52 @@ This is a demo project, but feel free to fork and modify for your own use.
 
 ## License
 
-MIT # klimametrix-client
-# klimametrix-client
-# klimametrix-client
+MIT
+
+## Deployment Architecture
+
+### Overview
+- Development: Monorepo (`klimametrix/`)
+  - Client: `apps/client/`
+  - Server: `apps/server/`
+
+- Production: Split Repositories
+  - API: `klimametrix-api` repository
+  - Client: `klimametrix-client` repository
+
+### Automated Deployment Flow
+
+1. **Development**
+   - Work in monorepo
+   - Commit and push changes
+   - GitHub Actions trigger automatically
+
+2. **Server Deployment**
+   - GitHub Action syncs `apps/server` to `klimametrix-api`
+   - Render deploys from `klimametrix-api`
+   - API available at: `https://klimametrix-api.onrender.com`
+
+3. **Client Deployment**
+   - GitHub Action syncs `apps/client` to `klimametrix-client`
+   - Render deploys from `klimametrix-client`
+   - Site available at: `https://klimametrix.onrender.com`
+
+### Environment Setup
+
+1. **API Environment Variables**
+   ```
+   DB_HOST=your-db-host
+   DB_PORT=5432
+   DB_USER=your-db-user
+   DB_PASSWORD=your-db-password
+   DB_NAME=your-db-name
+   ```
+
+2. **Client Environment Variables**
+   ```
+   VITE_API_URL=https://klimametrix-api.onrender.com
+   ```
+
+### GitHub Actions
+- `.github/workflows/sync-server.yml`: Syncs server code
+- `.github/workflows/sync-client.yml`: Syncs client code
