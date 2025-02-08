@@ -19,6 +19,7 @@ jobs:
           repository: mattburnett-repo/klimametrix-api
           path: deploy-repo
           token: ${{ secrets.DEPLOY_PAT }}
+
       - name: Sync Files
         run: |
           # Clean deployment repo
@@ -42,27 +43,11 @@ jobs:
           find ./src -type f -name "*.ts" -exec sed -i '/SwaggerModule/d' {} +
           find ./src -type f -name "*.ts" -exec sed -i '/DocumentBuilder/d' {} +
           
-          # Create simplified Dockerfile
-          cat > Dockerfile << 'EOF'
+          # Create Dockerfile
+          cat << 'EOF' > Dockerfile
           FROM node:18
 
           WORKDIR /app
-
-          COPY package.json ./
-          RUN npm install
-
-          COPY . .
-          RUN npm run build
-
-          EXPOSE 3000
-          CMD ["npm", "run", "start:prod"]
-          EOF
-
-          # Commit and push if there are changes
-          git config user.name "GitHub Action"
-          git config user.email "action@github.com"
-          git add -A
-          git diff --quiet && git diff --staged --quiet || (git commit -m "Sync from monorepo" && git push)
 
           COPY package.json ./
           RUN npm install
