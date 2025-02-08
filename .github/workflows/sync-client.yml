@@ -26,23 +26,11 @@ jobs:
           cd deploy-repo
           find . -not -path './.git/*' -not -name '.git' -delete
 
-          # Copy client files
+          # Copy all client files
           cp -r ../monorepo/apps/client/* ./
 
-          # Create simple package.json
-          cat << 'EOF' > package.json
-          {
-            "name": "klimametrix-client",
-            "private": true,
-            "version": "0.0.1",
-            "type": "module",
-            "scripts": {
-              "dev": "vite",
-              "build": "tsc && vite build",
-              "start": "vite preview"
-            }
-          }
-          EOF
+          # Add missing types to package.json
+          npm install --save-dev @types/react @types/react-dom @types/jest
 
           # Commit and push
           git config user.name "GitHub Action"
