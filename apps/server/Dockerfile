@@ -4,13 +4,13 @@ FROM node:18
 # Set working directory
 WORKDIR /app
 
-# Ensure Yarn 1.x is used
-RUN corepack disable && npm install -g yarn@1 && yarn --version
+# Enable Corepack, which will manage Yarn for us
+RUN corepack enable
 
-# Copy package files
-COPY package.json ./
+# Copy package.json (and yarn.lock if necessary)
+COPY package.json yarn.lock ./
 
-# Install dependencies without using a lockfile
+# Install dependencies using Corepack-managed Yarn (respecting the packageManager field)
 RUN yarn install --no-lockfile
 
 # Copy the rest of the application files
