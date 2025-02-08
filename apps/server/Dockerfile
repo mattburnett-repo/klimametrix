@@ -4,8 +4,8 @@ FROM node:18 as build
 # Set working directory for the build stage
 WORKDIR /app
 
-# Copy package.json and yarn.lock to install dependencies
-COPY package.json yarn.lock ./
+# Copy package.json  to install dependencies
+COPY package.json  ./
 
 # Enable Corepack and install Yarn (without the lockfile)
 RUN corepack enable && yarn install --no-lockfile
