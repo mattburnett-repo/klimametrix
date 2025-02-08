@@ -18,7 +18,7 @@ FROM node:18
 WORKDIR /app
 
 # Copy the installed node_modules from the build stage
-COPY --from=build /app/node_modules /app/node_modules
+# COPY --from=build /app/node_modules /app/node_modules
 
 # Copy the rest of the application files
 COPY . .
