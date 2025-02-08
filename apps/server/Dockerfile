@@ -8,7 +8,8 @@ WORKDIR /app
 COPY package.json ./
 
 # Enable Corepack and install Yarn (without the lockfile)
-RUN corepack enable && yarn install --no-lockfile
+# RUN corepack enable && yarn install --no-lockfile
+RUN corepack enable && yarn install
 
 # Stage 2: Final image
 FROM node:18
