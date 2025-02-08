@@ -1,17 +1,23 @@
-# Use an official Node.js image
-FROM node:18
+# Stage 1: Build the dependencies
+FROM node:18 as build
 
-# Set working directory
+# Set working directory for the build stage
 WORKDIR /app
 
-# Enable Corepack, which will manage Yarn for us
-RUN corepack enable
+# Copy package.json to install dependencies
+COPY package.json ./
 
-# Copy package.json (and yarn.lock if necessary)
-COPY package.json yarn.lock ./
+# Enable Corepack and install Yarn (without the lockfile)
+RUN corepack enable && yarn install --no-lockfile
 
-# Install dependencies using Corepack-managed Yarn (respecting the packageManager field)
-RUN yarn install --no-lockfile
+# Stage 2: Final image
+FROM node:18
+
+# Set working directory for the final image
+WORKDIR /app
+
+# Copy the installed node_modules from the build stage
+COPY --from=build /app/node_modules /app/node_modules
 
 # Copy the rest of the application files
 COPY . .
