@@ -63,3 +63,5 @@ jobs:
           git config user.email "action@github.com"
           git add -A
           git diff --quiet && git diff --staged --quiet || (git commit -m "Sync from monorepo" && git push)
+
+# More can go here.
