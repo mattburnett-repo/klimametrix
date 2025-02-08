@@ -31,14 +31,38 @@ jobs:
 
           # Copy and modify package.json
           cp ../monorepo/apps/server/package.json ./
-          # Update to a specific, known working version
-          sed -i 's/"@nestjs\/swagger": "^11.0.3"/"@nestjs\/swagger": "10.0.0"/g' package.json
+          
+          # Remove swagger dependencies
+          sed -i '/"@nestjs\/swagger"/d' package.json
+          
+          # Remove swagger from source code
+          find ./src -type f -name "*.ts" -exec sed -i '/import.*swagger/d' {} +
+          find ./src -type f -name "*.ts" -exec sed -i '/@ApiTags/d' {} +
+          find ./src -type f -name "*.ts" -exec sed -i '/@ApiProperty/d' {} +
+          find ./src -type f -name "*.ts" -exec sed -i '/SwaggerModule/d' {} +
+          find ./src -type f -name "*.ts" -exec sed -i '/DocumentBuilder/d' {} +
           
           # Create simplified Dockerfile
           cat > Dockerfile << 'EOF'
           FROM node:18
 
           WORKDIR /app
+
+          COPY package.json ./
+          RUN npm install
+
+          COPY . .
+          RUN npm run build
+
+          EXPOSE 3000
+          CMD ["npm", "run", "start:prod"]
+          EOF
+
+          # Commit and push if there are changes
+          git config user.name "GitHub Action"
+          git config user.email "action@github.com"
+          git add -A
+          git diff --quiet && git diff --staged --quiet || (git commit -m "Sync from monorepo" && git push)
 
           COPY package.json ./
           RUN npm install
